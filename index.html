@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0f1419">
+<title>codeiam.ai</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+:root{--bg:#0f1419;--s1:#161c24;--s2:#1d2530;--bd:#2a3441;--tx:#e6ebf2;--mu:#8793a5;--fast:#ffb454;--mid:#a99bff;--deep:#2ee6c5;--c:var(--mid);color-scheme:dark}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%}
+body{background:var(--bg);color:var(--tx);font:15px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;display:flex;flex-direction:column;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+button,textarea,input{font:inherit;color:inherit}
+header{display:flex;align-items:center;gap:8px;padding:10px 14px}
+.logo{font:700 18px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:-.5px}
+.logo span{color:var(--c)}
+.sp{flex:1}
+.ib{background:var(--s1);border:1px solid var(--bd);border-radius:10px;width:36px;height:36px;cursor:pointer}
+.ib:focus-visible,.m:focus-visible,#go:focus-visible,.chip:focus-visible{outline:2px solid var(--c);outline-offset:2px}
+.models{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:0 14px 10px}
+.m{background:var(--s1);border:1px solid var(--bd);border-radius:12px;padding:8px 6px;text-align:center;cursor:pointer;color:var(--mu)}
+.m b{display:block;font-size:14px;color:var(--tx)}
+.m small{font-size:11.5px}
+.m.on{border-color:var(--k);background:var(--s2)}
+.m.on b{color:var(--k)}
+#chat{flex:1;overflow-y:auto;padding:6px 14px 18px}
+.empty{margin:7vh auto 0;max-width:460px;text-align:center}
+.empty h1{font:700 26px ui-monospace,monospace;letter-spacing:-1px}
+.empty h1 span{color:var(--c)}
+.empty p{color:var(--mu);margin:8px 0 18px}
+.chip{display:block;width:100%;text-align:left;background:var(--s1);border:1px solid var(--bd);border-radius:12px;padding:11px 13px;margin-bottom:8px;cursor:pointer}
+.chip:hover{border-color:var(--c)}
+.u{display:flex;justify-content:flex-end;margin:14px 0}
+.u div{background:var(--s2);border:1px solid var(--bd);border-radius:16px 16px 4px 16px;padding:9px 13px;max-width:88%;overflow-wrap:anywhere}
+.a{margin:14px 0;max-width:100%}
+.tag{font-size:12.5px;color:var(--k);margin-bottom:4px;display:flex;align-items:center;gap:6px}
+.tag:before{content:"";width:7px;height:7px;border-radius:50%;background:var(--k)}
+.body{overflow-wrap:anywhere}
+.body h3,.body h4{margin:12px 0 4px}
+.body li{margin-left:20px}
+.body code{background:var(--s2);border-radius:5px;padding:1px 5px;font:13px ui-monospace,Menlo,monospace}
+.body a{color:var(--deep)}
+.code{margin:10px 0;border:1px solid var(--bd);border-radius:12px;overflow:hidden;background:#0a0e13}
+.ch{display:flex;justify-content:space-between;align-items:center;padding:5px 6px 5px 12px;background:var(--s1);color:var(--mu);font-size:12.5px}
+.cp{background:none;border:1px solid var(--bd);border-radius:8px;padding:3px 10px;cursor:pointer;color:var(--tx)}
+pre{overflow-x:auto;padding:12px;margin:0}
+pre code{background:none;padding:0;font:13px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;white-space:pre}
+.st{color:var(--deep);font-size:13px;margin-top:6px}
+.st.err{color:#ff7b7b}
+.src{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.src a{font-size:12px;color:var(--mu);border:1px solid var(--bd);border-radius:20px;padding:2px 10px;text-decoration:none}
+.bar{padding:8px 14px 12px;border-top:1px solid var(--bd);background:var(--bg)}
+.row{display:flex;gap:8px;align-items:flex-end}
+#in{flex:1;resize:none;background:var(--s1);border:1px solid var(--bd);border-radius:14px;padding:10px 13px;max-height:160px;line-height:1.45}
+#in:focus{outline:none;border-color:var(--c)}
+#go{width:42px;height:42px;border-radius:12px;border:0;background:var(--c);color:#0f1419;font-weight:700;font-size:18px;cursor:pointer}
+.tools{display:flex;gap:8px;margin-bottom:8px;align-items:center}
+.tg{background:var(--s1);border:1px solid var(--bd);border-radius:20px;padding:4px 12px;font-size:13px;cursor:pointer;color:var(--mu)}
+.tg.on{color:var(--deep);border-color:var(--deep)}
+.hint{color:var(--mu);font-size:12px}
+dialog{background:var(--s1);border:1px solid var(--bd);border-radius:16px;padding:18px;width:min(92vw,420px);margin:auto}
+dialog::backdrop{background:#000a}
+dialog label{display:block;font-size:13px;color:var(--mu);margin:12px 0 4px}
+dialog input{width:100%;background:var(--bg);border:1px solid var(--bd);border-radius:10px;padding:9px 11px}
+dialog .r{display:flex;gap:8px;margin-top:16px}
+dialog .r button{flex:1;padding:9px;border-radius:10px;border:1px solid var(--bd);background:var(--s2);cursor:pointer}
+dialog .r .pri{background:var(--mid);color:#0f1419;border:0;font-weight:700}
+@media(prefers-reduced-motion:no-preference){.dots:after{content:"";animation:d 1.2s steps(4) infinite}@keyframes d{0%{content:""}25%{content:"."}50%{content:".."}75%,100%{content:"..."}}}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">codeiam<span>.ai</span></div><div class="sp"></div>
+  <button class="ib" id="new" title="New chat" aria-label="New chat">+</button>
+  <button class="ib" id="set" title="Settings" aria-label="Settings">⚙</button>
+</header>
+<div class="models" id="models">
+  <button class="m" data-m="fast" style="--k:var(--fast)"><b>Spark</b><small>Fast, simple code</small></button>
+  <button class="m" data-m="mid" style="--k:var(--mid)"><b>Core</b><small>Balanced</small></button>
+  <button class="m" data-m="deep" style="--k:var(--deep)"><b>Deep</b><small>Big code + research</small></button>
+</div>
+<main id="chat" aria-live="polite"></main>
+<div class="bar">
+  <div class="tools"><button class="tg" id="res">🌐 Web research</button><span class="hint" id="hint"></span></div>
+  <div class="row"><textarea id="in" rows="1" placeholder="Describe what to build or fix..."></textarea><button id="go" aria-label="Send">➤</button></div>
+</div>
+<dialog id="dlg">
+  <h3>Settings</h3>
+  <label for="url">Backend URL (your Cloudflare Worker)</label>
+  <input id="url" placeholder="https://codeiam.yourname.workers.dev" autocapitalize="off" autocomplete="off">
+  <label for="code">Access code (optional)</label>
+  <input id="code" type="password" autocomplete="off">
+  <div class="r"><button id="clr">Clear chats</button><button class="pri" id="sv">Save</button></div>
+</dialog>
+<script>
+const $=s=>document.querySelector(s);
+const load=(k,d)=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch{return d}};
+const save=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch{}};
+const LABEL={fast:'Spark',mid:'Core',deep:'Deep'},COLOR={fast:'var(--fast)',mid:'var(--mid)',deep:'var(--deep)'};
+const HINT={fast:'Quick answers, may be less polished',mid:'Good for most coding',deep:'Slower, writes large code'};
+let cfg=load('ci_cfg',{url:'',code:''}),hist=load('ci_chat',[]),model=load('ci_model','mid'),research=load('ci_res',false),busy=false,ctl=null,raf=0;
+const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function md(t){
+  const bl=[];
+  t=t.replace(/```([\w+#-]*)[^\n]*\n?([\s\S]*?)(```|$)/g,(_,l,c)=>{bl.push([l,c]);return '\u0000'+(bl.length-1)+'\u0000'});
+  t=esc(t).replace(/`([^`\n]+)`/g,'<code>$1</code>').replace(/\*\*([^*\n]+)\*\*/g,'<b>$1</b>')
+    .replace(/^#{2,3} (.*)$/gm,'<h3>$1</h3>').replace(/^#### (.*)$/gm,'<h4>$1</h4>').replace(/^# (.*)$/gm,'<h3>$1</h3>')
+    .replace(/^\s*(?:[-*]|\d+\.) (.*)$/gm,'<li>$1</li>')
+    .replace(/\[([^\]]+)\]\((https?:[^)\s]+)\)/g,'<a href="$2" target="_blank" rel="noopener">$1</a>')
+    .replace(/\n/g,'<br>').replace(/(<\/(?:li|h3|h4)>)<br>/g,'$1').replace(/(<br>)?(\u0000\d+\u0000)(<br>)?/g,'$2');
+  return t.replace(/\u0000(\d+)\u0000/g,(_,i)=>{const[l,c]=bl[i];return `<div class="code"><div class="ch"><span>${esc(l||'code')}</span><button class="cp">Copy</button></div><pre><code>${esc(c.replace(/\n$/,''))}</code></pre></div>`});
+}
+function host(u){try{return new URL(u).hostname.replace(/^www\./,'')}catch{return u}}
+function msgHtml(m){
+  if(m.role==='user')return `<div class="u"><div>${esc(m.content).replace(/\n/g,'<br>')}</div></div>`;
+  const src=(m.sources||[]).length?`<div class="src">${m.sources.map(s=>`<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(host(s.url))}</a>`).join('')}</div>`:'';
+  const st=m.status?`<div class="st ${m.err?'err':''}">${esc(m.status)}${m.err?'':'<span class="dots"></span>'}</div>`:'';
+  return `<div class="a" style="--k:${COLOR[m.model]}"><div class="tag">${LABEL[m.model]||''}</div><div class="body">${md(m.content||'')}</div>${st}${src}</div>`;
+}
+const EX=['Build a to-do app in HTML, CSS and JS','Find the bug in my code and fix it','Research the best way to add login to a website'];
+function render(){
+  const c=$('#chat');
+  c.innerHTML=hist.length?hist.map(msgHtml).join(''):`<div class="empty"><h1>codeiam<span>.ai</span></h1><p>Your coding agent. Pick a model, then describe what you need.</p>${EX.map(e=>`<button class="chip">${e}</button>`).join('')}</div>`;
+  c.scrollTop=c.scrollHeight;
+}
+function updateLast(){
+  cancelAnimationFrame(raf);
+  raf=requestAnimationFrame(()=>{const c=$('#chat'),near=c.scrollHeight-c.scrollTop-c.clientHeight<140;c.lastElementChild.outerHTML=msgHtml(hist[hist.length-1]);if(near)c.scrollTop=c.scrollHeight});
+}
+function ui(){
+  document.querySelectorAll('.m').forEach(b=>b.classList.toggle('on',b.dataset.m===model));
+  document.documentElement.style.setProperty('--c',COLOR[model]);
+  $('#res').classList.toggle('on',research);
+  $('#hint').textContent=HINT[model];
+}
+async function send(text){
+  text=(text||$('#in').value).trim();
+  if(!text||busy)return;
+  if(!cfg.url){$('#dlg').showModal();return}
+  $('#in').value='';$('#in').style.height='auto';
+  hist.push({role:'user',content:text});
+  const a={role:'assistant',content:'',model,status:research?'Researching the web':'Thinking',sources:[]};
+  hist.push(a);render();
+  const msgs=hist.slice(0,-1).filter(m=>m.content).map(m=>({role:m.role,content:m.content}));
+  busy=true;$('#go').textContent='■';ctl=new AbortController();
+  try{
+    const res=await fetch(cfg.url,{method:'POST',headers:{'content-type':'application/json','x-access-code':cfg.code||''},body:JSON.stringify({model,research,messages:msgs}),signal:ctl.signal});
+    if(!res.ok)throw new Error(res.status===401?'Wrong access code.':'Backend error '+res.status+': '+(await res.text()).slice(0,200));
+    const rd=res.body.getReader(),dec=new TextDecoder();let buf='';
+    for(;;){
+      const{done,value}=await rd.read();if(done)break;
+      buf+=dec.decode(value,{stream:true});
+      const parts=buf.split('\n\n');buf=parts.pop();
+      for(const p of parts){
+        const ln=p.split('\n').find(l=>l.startsWith('data: '));if(!ln)continue;
+        let e;try{e=JSON.parse(ln.slice(6))}catch{continue}
+        if(e.type==='error')throw new Error(e.error&&e.error.message||'Model error');
+        if(e.type==='content_block_start'){
+          const cb=e.content_block;
+          if(cb.type==='server_tool_use')a.status='Searching the web';
+          if(cb.type==='web_search_tool_result'&&Array.isArray(cb.content)){cb.content.forEach(r=>{if(r.url&&!a.sources.some(s=>s.url===r.url))a.sources.push({url:r.url})});a.status='Writing'}
+          if(cb.type==='text')a.status='';
+        }
+        if(e.type==='content_block_delta'&&e.delta.type==='text_delta'){a.content+=e.delta.text;a.status=''}
+        updateLast();
+      }
+    }
+    a.status='';
+  }catch(err){
+    a.status=err.name==='AbortError'?'Stopped.':(err.message==='Failed to fetch'?'Cannot reach your backend. Check the URL in settings.':err.message);a.err=true;
+  }
+  busy=false;$('#go').textContent='➤';ctl=null;updateLast();save('ci_chat',hist);
+}
+$('#go').onclick=()=>busy?ctl.abort():send();
+$('#in').addEventListener('input',e=>{e.target.style.height='auto';e.target.style.height=Math.min(e.target.scrollHeight,160)+'px'});
+$('#in').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey&&matchMedia('(pointer:fine)').matches){e.preventDefault();send()}});
+$('#models').onclick=e=>{const b=e.target.closest('.m');if(!b)return;model=b.dataset.m;research=model==='deep';save('ci_model',model);save('ci_res',research);ui()};
+$('#res').onclick=()=>{research=!research;save('ci_res',research);ui()};
+$('#new').onclick=()=>{if(busy)return;hist=[];save('ci_chat',hist);render()};
+$('#set').onclick=()=>{$('#url').value=cfg.url;$('#code').value=cfg.code;$('#dlg').showModal()};
+$('#sv').onclick=()=>{cfg={url:$('#url').value.trim(),code:$('#code').value};save('ci_cfg',cfg);$('#dlg').close()};
+$('#clr').onclick=()=>{hist=[];save('ci_chat',hist);render();$('#dlg').close()};
+$('#chat').addEventListener('click',e=>{
+  const ch=e.target.closest('.chip');if(ch)return send(ch.textContent);
+  const cp=e.target.closest('.cp');
+  if(cp){const t=cp.closest('.code').querySelector('code').textContent;navigator.clipboard.writeText(t).then(()=>{cp.textContent='Copied';setTimeout(()=>cp.textContent='Copy',1400)}).catch(()=>{cp.textContent='Failed'})}
+});
+if('serviceWorker'in navigator)addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+ui();render();
+</script>
+</body>
+</html>
